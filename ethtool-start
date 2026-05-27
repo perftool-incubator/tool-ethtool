@@ -1,0 +1,61 @@
+#!/bin/bash
+exec >ethtool-start-stderrout.txt
+exec 2>&1
+
+echo "args: $@"
+echo "pwd: $(pwd)"
+echo "hostname: $(hostname)"
+
+interval=3
+interfaces=""
+ethtool_collect="/usr/bin/ethtool-collect"
+
+longopts="interval:,interfaces:"
+opts=$(getopt -q -o "" --longoptions "$longopts" -n "getopt.sh" -- "$@")
+if [ $? -ne 0 ]; then
+    printf -- "\tUnrecognized option specified\n\n"
+    exit 1
+fi
+eval set -- "$opts"
+while true; do
+    case "$1" in
+        --interval)
+            shift
+            interval=$1
+            echo "interval=$interval"
+            shift
+            ;;
+        --interfaces)
+            shift
+            interfaces=$1
+            echo "interfaces=$interfaces"
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Invalid option: $1"
+            exit 1
+    esac
+done
+
+if [ -z "$interfaces" ]; then
+    interfaces=$(ip -o link show up | awk -F': ' '{print $2}' | grep -v '^lo$' | tr '\n' ',' | sed 's/,$//')
+    echo "Auto-detected interfaces: $interfaces"
+fi
+
+if [ -e "$ethtool_collect" ]; then
+    $ethtool_collect "$interfaces" "$interval" &
+    collector_pid=$!
+    if [ -z "$collector_pid" ]; then
+        echo "Could not get ethtool-collect PID, exiting"
+        exit 1
+    fi
+    echo "ethtool-collect pid is $collector_pid"
+    echo $collector_pid > ethtool-pid.txt
+else
+    echo "$ethtool_collect is not present, exiting"
+    exit 1
+fi

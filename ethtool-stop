@@ -1,0 +1,24 @@
+#!/bin/bash
+exec >ethtool-stop-stderrout.txt
+exec 2>&1
+
+echo "args: $@"
+echo "hostname: $(hostname)"
+
+if [ -e ethtool-pid.txt ]; then
+    pid=$(cat ethtool-pid.txt)
+    if [ -z "$pid" ]; then
+        echo "PID for ethtool-collect not found"
+        exit 1
+    fi
+    kill -s SIGTERM "$pid"
+    find ./ethtool-data -type f | while read line; do
+        xz -3 -T 0 "$line"
+    done
+else
+    echo "ethtool-pid.txt not found"
+    echo "PWD: $(pwd)"
+    echo "LS:"
+    ls -l
+    exit 1
+fi
