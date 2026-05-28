@@ -13,7 +13,7 @@ from toolbox.cdm_metrics import CDMMetrics
 from toolbox.fileio import open_read_text_file
 
 
-def process_iface(iface, log_file):
+def process_iface(iface, log_file, file_id):
     metrics = CDMMetrics()
     curr_timestamp_ms = None
     prev_timestamp_ms = None
@@ -61,7 +61,7 @@ def process_iface(iface, log_file):
                         "direction": direction,
                     }
                     sample = {"value": pps, "end": curr_timestamp_ms}
-                    metrics.log_sample("0", desc, names, sample)
+                    metrics.log_sample(file_id, desc, names, sample)
 
     fh.close()
     metrics.finish_samples()
@@ -74,13 +74,15 @@ def main():
         print(f"ERROR: {data_dir} directory not found")
         return
 
+    file_idx = 0
     for entry in sorted(os.listdir(data_dir)):
         m = re.match(r'^(.+)\.txt(\.xz)?$', entry)
         if m:
             iface = m.group(1)
             log_file = os.path.join(data_dir, entry)
-            print(f"Processing {iface} from {log_file}")
-            process_iface(iface, log_file)
+            print(f"Processing {iface} from {log_file} (file_id={file_idx})")
+            process_iface(iface, log_file, str(file_idx))
+            file_idx += 1
 
     print("ethtool post-processing complete")
 
