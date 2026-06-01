@@ -19,8 +19,16 @@ def classify_counter(counter_name):
     Returns (metric_type, names_dict) where names_dict contains
     breakout dimensions like direction, num, etc.
     """
-    # Per-queue: rx0_packets, tx3_bytes, rx12_csum_none, etc.
+    # Per-queue (Mellanox): rx0_packets, tx3_bytes, rx12_csum_none, etc.
     m = re.match(r'^(rx|tx)(\d+)_(.+)$', counter_name)
+    if m:
+        return (
+            f"{m.group(3)}-sec",
+            {"direction": m.group(1), "num": int(m.group(2))},
+        )
+
+    # Per-queue (Intel): rx_queue_0_packets, tx_queue_3_bytes, etc.
+    m = re.match(r'^(rx|tx)_queue_(\d+)_(.+)$', counter_name)
     if m:
         return (
             f"{m.group(3)}-sec",
