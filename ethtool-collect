@@ -34,7 +34,7 @@ while true; do
         fi
         outfile="ethtool-data/${iface}.txt"
         echo "$timestamp" >> "$outfile"
-        ethtool -S "$iface" 2>/dev/null | grep -E 'rx[0-9]+_packets:|tx[0-9]+_packets:' >> "$outfile"
+        ethtool -S "$iface" 2>/dev/null >> "$outfile"
     done
     sleep "$interval"
 done
