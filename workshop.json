@@ -10,5 +10,15 @@
             "requirements": []
         }
     ],
-    "requirements": []
+    "requirements": [
+        {
+            "name": "ethtool",
+            "type": "distro",
+            "distro_info": {
+                "packages": [
+                    "ethtool"
+                ]
+            }
+        }
+    ]
 }
