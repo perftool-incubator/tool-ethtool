@@ -111,7 +111,10 @@ def process_iface(iface, log_file, file_id):
         if time_diff_sec <= 0:
             continue
 
-        rate = (count - prev_counts[counter_name]) / time_diff_sec
+        count_diff = count - prev_counts[counter_name]
+        if count_diff < 0:
+            continue
+        rate = count_diff / time_diff_sec
 
         metric_type, extra_names = classify_counter(counter_name)
 
