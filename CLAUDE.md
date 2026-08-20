@@ -16,6 +16,8 @@ Crucible tool for collecting per-queue NIC statistics via `ethtool -S` during be
 | `ethtool-stop` | Kills collector, compresses output with xz |
 | `ethtool-collect` | Collection loop: runs `ethtool -S` per interface, writes timestamped output |
 | `ethtool-post-process.py` | Parses raw output, classifies counters, computes rates, logs via CDMMetrics |
+| `tool-metadata.json` | Machine-readable description and CDM-indexed status (consumed by `crucible tools list`) |
+| `multiplex.json` | Parameter validation rules and `defaults` preset for multiplex (mirrors benchmark `multiplex.json`) |
 
 ## Post-Processing
 `ethtool-post-process.py` reads timestamped `ethtool -S` output from `ethtool-data/<iface>.txt[.xz]` files. For each counter, it computes the per-second rate between consecutive samples. Counters are classified by pattern into metric types with breakout dimensions (direction, queue number, priority).

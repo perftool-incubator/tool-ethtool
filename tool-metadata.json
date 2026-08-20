@@ -1,0 +1,19 @@
+{
+  "rickshaw-tool-metadata": {
+    "schema": {
+      "version": "2026.08.11"
+    }
+  },
+  "tool": "ethtool",
+  "description": "Per-queue and aggregate NIC statistics via periodic 'ethtool -S' sampling. Every raw counter is converted to a per-second rate and logged as its own CDM metric type (named '<counter-name>-sec'), with an 'interface' breakout dimension plus, where the counter name indicates it, 'direction'/'num' -- counter names are driver/hardware-defined and not enumerable in advance.",
+  "cdm_indexed": true,
+  "cdm_sources": [
+    {
+      "source": "ethtool",
+      "types": ["<counter-name>-sec"]
+    }
+  ],
+  "output_files": [
+    "ethtool-data/<iface>.txt.xz"
+  ]
+}

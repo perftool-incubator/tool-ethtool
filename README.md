@@ -12,6 +12,8 @@ Crucible tool for collecting per-queue NIC statistics via `ethtool -S` during be
 | `ethtool-stop` | Stops the collector and compresses output |
 | `ethtool-collect` | Collection loop that periodically samples `ethtool -S` |
 | `ethtool-post-process.py` | Converts raw ethtool output into crucible metrics |
+| `tool-metadata.json` | Machine-readable description and CDM-indexed status |
+| `multiplex.json` | Parameter validation rules for multiplex |
 
 ## Parameters
 
